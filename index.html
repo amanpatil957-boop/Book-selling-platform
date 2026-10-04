@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BookLoop - Buy & Sell Student Books</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #f8fafc;
+            color: #172033;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            width: 100%;
+            padding: 18px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            border-bottom: 1px solid #edf0f5;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 800;
+            color: #5b4bdb;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #ff7a59;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4b5563;
+            font-size: 15px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #5b4bdb;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .login-btn {
+            padding: 10px 18px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .signup-btn {
+            padding: 10px 18px;
+            border-radius: 9px;
+            background: #5b4bdb;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .signup-btn:hover {
+            background: #4638bd;
+            transform: translateY(-2px);
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            min-height: 650px;
+            display: flex;
+            align-items: center;
+            padding: 70px 7%;
+            background:
+                radial-gradient(circle at 85% 20%, #e8e4ff 0, transparent 28%),
+                radial-gradient(circle at 10% 80%, #ffe9e2 0, transparent 25%),
+                #f8f9ff;
+        }
+
+        .hero-content {
+            width: 55%;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #ebe8ff;
+            color: #5b4bdb;
+            padding: 8px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: clamp(42px, 5vw, 70px);
+            line-height: 1.05;
+            margin-bottom: 25px;
+            letter-spacing: -2px;
+        }
+
+        .hero h1 span {
+            color: #5b4bdb;
+        }
+
+        .hero p {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #64748b;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            display: flex;
+            max-width: 620px;
+            background: white;
+            padding: 7px;
+            border-radius: 13px;
+            box-shadow: 0 10px 35px rgba(50, 40, 120, 0.12);
+            margin-bottom: 22px;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 15px;
+            font-size: 15px;
+        }
+
+        .search-box button {
+            border: none;
+            background: #5b4bdb;
+            color: white;
+            padding: 0 25px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        .search-box button:hover {
+            background: #4638bd;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .primary-btn {
+            background: #ff7654;
+            color: white;
+            padding: 14px 23px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        .primary-btn:hover {
+            background: #e96040;
+            transform: translateY(-3px);
+        }
+
+        .secondary-btn {
+            padding: 14px 23px;
+            border: 1px solid #d9dbe5;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 700;
+            background: white;
+        }
+
+        /* ================= HERO ILLUSTRATION ================= */
+
+        .hero-visual {
+            width: 45%;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .book-stack {
+            position: relative;
+            width: 340px;
+            height: 400px;
+        }
+
+        .book {
+            position: absolute;
+            width: 230px;
+            height: 300px;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 22px;
+            font-weight: 800;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .book1 {
+            background: linear-gradient(135deg, #5b4bdb, #8d80ff);
+            transform: rotate(-10deg);
+            left: 20px;
+            top: 45px;
+        }
+
+        .book2 {
+            background: linear-gradient(135deg, #ff7654, #ffad85);
+            transform: rotate(5deg);
+            left: 100px;
+            top: 15px;
+        }
+
+        .book3 {
+            background: linear-gradient(135deg, #14b8a6, #62d8cb);
+            transform: rotate(15deg);
+            left: 70px;
+            top: 100px;
+        }
+
+        /* ================= SECTION ================= */
+
+        .section {
+            padding: 90px 7%;
+        }
+
+        .section-title {
+            text-align: center;
+            max-width: 650px;
+            margin: auto;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        .section-title p {
+            color: #64748b;
+            line-height: 1.7;
+        }
+
+        /* ================= CATEGORIES ================= */
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 18px;
+        }
+
+        .category {
+            background: white;
+            border: 1px solid #edf0f5;
+            border-radius: 15px;
+            padding: 25px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .category:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.07);
+            border-color: #d7d1ff;
+        }
+
+        .category-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .category h4 {
+            font-size: 14px;
+        }
+
+        /* ================= BOOKS ================= */
+
+        .books {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #edf0f5;
+            transition: 0.3s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 18px 35px rgba(0,0,0,0.09);
+        }
+
+        .book-cover {
+            height: 230px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+            color: white;
+            font-size: 20px;
+            text-align: center;
+            font-weight: 800;
+        }
+
+        .cover-purple {
+            background: linear-gradient(135deg, #5b4bdb, #8d80ff);
+        }
+
+        .cover-orange {
+            background: linear-gradient(135deg, #ff7654, #ffb18e);
+        }
+
+        .cover-blue {
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+        }
+
+        .cover-green {
+            background: linear-gradient(135deg, #059669, #34d399);
+        }
+
+        .book-info {
+            padding: 18px;
+        }
+
+        .book-info h3 {
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+
+        .author {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 15px;
+        }
+
+        .price-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .price {
+            font-size: 19px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .condition {
+            font-size: 11px;
+            background: #e8f8ef;
+            color: #159447;
+            padding: 5px 8px;
+            border-radius: 5px;
+            font-weight: 700;
+        }
+
+        /* ================= HOW IT WORKS ================= */
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .step {
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            text-align: center;
+            border: 1px solid #edf0f5;
+        }
+
+        .step-number {
+            width: 55px;
+            height: 55px;
+            background: #ebe8ff;
+            color: #5b4bdb;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 800;
+            font-size: 20px;
+            margin: 0 auto 20px;
+        }
+
+        .step h3 {
+            margin-bottom: 12px;
+        }
+
+        .step p {
+            color: #64748b;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats {
+            background: #5b4bdb;
+            color: white;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            padding: 55px 7%;
+            text-align: center;
+        }
+
+        .stat h2 {
+            font-size: 35px;
+            margin-bottom: 5px;
+        }
+
+        .stat p {
+            opacity: 0.8;
+        }
+
+        /* ================= SELL CTA ================= */
+
+        .sell-section {
+            margin: 80px 7%;
+            border-radius: 25px;
+            padding: 65px;
+            background: linear-gradient(135deg, #20165e, #5b4bdb);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        .sell-section h2 {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        .sell-section p {
+            color: #ddd8ff;
+            max-width: 550px;
+            line-height: 1.6;
+        }
+
+        .sell-btn {
+            background: white;
+            color: #5b4bdb;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #111827;
+            color: white;
+            padding: 60px 7% 25px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand p {
+            color: #9ca3af;
+            margin-top: 15px;
+            max-width: 330px;
+            line-height: 1.6;
+        }
+
+        footer h4 {
+            margin-bottom: 15px;
+        }
+
+        footer a {
+            display: block;
+            text-decoration: none;
+            color: #9ca3af;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        footer a:hover {
+            color: white;
+        }
+
+        .copyright {
+            border-top: 1px solid #293241;
+            padding-top: 20px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1000px) {
+
+            .hero-content {
+                width: 60%;
+            }
+
+            .hero-visual {
+                width: 40%;
+            }
+
+            .categories {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .books {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 750px) {
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-content,
+            .hero-visual {
+                width: 100%;
+            }
+
+            .hero-content {
+                margin-bottom: 50px;
+            }
+
+            .hero p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .search-box {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-actions {
+                justify-content: center;
+            }
+
+            .categories {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .books {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+
+            .sell-section {
+                flex-direction: column;
+                text-align: center;
+                gap: 30px;
+                padding: 45px 25px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <header class="navbar">
+
+        <a href="#" class="logo">
+            Book<span>Loop</span>
+        </a>
+
+        <nav class="nav-links">
+            <a href="#books">Browse Books</a>
+            <a href="#categories">Categories</a>
+            <a href="#how">How It Works</a>
+        </nav>
+
+        <div class="nav-buttons">
+            <a href="#" class="login-btn">Login</a>
+            <a href="#" class="signup-btn">Sign Up</a>
+        </div>
+
+    </header>
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <span class="badge">
+                📚 India's Student Book Marketplace
+            </span>
+
+            <h1>
+                Give Your Books<br>
+                <span>A Second Life.</span>
+            </h1>
+
+            <p>
+                Buy affordable used textbooks from fellow students
+                or sell the books you no longer need. Save money,
+                earn money, and keep books in circulation.
+            </p>
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search books, authors, ISBN..."
+                >
+
+                <button onclick="searchBooks()">
+                    Search
+                </button>
+
+            </div>
+
+            <div class="hero-actions">
+
+                <a href="#books" class="primary-btn">
+                    Browse Books →
+                </a>
+
+                <a href="#sell" class="secondary-btn">
+                    Sell Your Books
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="hero-visual">
+
+            <div class="book-stack">
+
+                <div class="book book1">
+                    ENGINEERING<br>
+                    MATHEMATICS
+                </div>
+
+                <div class="book book2">
+                    DATA<br>
+                    STRUCTURES
+                </div>
+
+                <div class="book book3">
+                    DATABASE<br>
+                    SYSTEMS
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= CATEGORIES ================= -->
+
+    <section class="section" id="categories">
+
+        <div class="section-title">
+
+            <h2>Explore Categories</h2>
+
+            <p>
+                Find textbooks, reference books and study material
+                for your course.
+            </p>
+
+        </div>
+
+        <div class="categories">
+
+            <div class="category">
+                <div class="category-icon">💻</div>
+                <h4>Computer Science</h4>
+            </div>
+
+            <div class="category">
+                <div class="category-icon">⚙️</div>
+                <h4>Engineering</h4>
+            </div>
+
+            <div class="category">
+                <div class="category-icon">🩺</div>
+                <h4>Medical</h4>
+            </div>
+
+            <div class="category">
+                <div class="category-icon">📊</div>
+                <h4>Commerce</h4>
+            </div>
+
+            <div class="category">
+                <div class="category-icon">📖</div>
+                <h4>Arts</h4>
+            </div>
+
+            <div class="category">
+                <div class="category-icon">🎯</div>
+                <h4>Competitive Exams</h4>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FEATURED BOOKS ================= -->
+
+    <section class="section" id="books">
+
+        <div class="section-title">
+
+            <h2>Popular Books</h2>
+
+            <p>
+                Discover affordable books listed by students.
+            </p>
+
+        </div>
+
+
+        <div class="books">
+
+            <div class="book-card">
+
+                <div class="book-cover cover-purple">
+                    DATA<br>STRUCTURES<br>& ALGORITHMS
+                </div>
+
+                <div class="book-info">
+
+                    <h3>Data Structures & Algorithms</h3>
+
+                    <div class="author">
+                        Ellis Horowitz
+                    </div>
+
+                    <div class="price-row">
+
+                        <span class="price">₹350</span>
+
+                        <span class="condition">
+                            GOOD
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="book-card">
+
+                <div class="book-cover cover-orange">
+                    ENGINEERING<br>MATHEMATICS
+                </div>
+
+                <div class="book-info">
+
+                    <h3>Engineering Mathematics</h3>
+
+                    <div class="author">
+                        B.S. Grewal
+                    </div>
+
+                    <div class="price-row">
+
+                        <span class="price">₹280</span>
+
+                        <span class="condition">
+                            LIKE NEW
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="book-card">
+
+                <div class="book-cover cover-blue">
+                    DATABASE<br>MANAGEMENT<br>SYSTEMS
+                </div>
+
+                <div class="book-info">
+
+                    <h3>Database Management Systems</h3>
+
+                    <div class="author">
+                        Raghu Ramakrishnan
+                    </div>
+
+                    <div class="price-row">
+
+                        <span class="price">₹420</span>
+
+                        <span class="condition">
+                            GOOD
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="book-card">
+
+                <div class="book-cover cover-green">
+                    OPERATING<br>SYSTEMS
+                </div>
+
+                <div class="book-info">
+
+                    <h3>Operating System Concepts</h3>
+
+                    <div class="author">
+                        Silberschatz
+                    </div>
+
+                    <div class="price-row">
+
+                        <span class="price">₹500</span>
+
+                        <span class="condition">
+                            LIKE NEW
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= STATS ================= -->
+
+    <section class="stats">
+
+        <div class="stat">
+            <h2>5K+</h2>
+            <p>Books Listed</p>
+        </div>
+
+        <div class="stat">
+            <h2>2K+</h2>
+            <p>Students</p>
+        </div>
+
+        <div class="stat">
+            <h2>20+</h2>
+            <p>Colleges</p>
+        </div>
+
+        <div class="stat">
+            <h2>₹10L+</h2>
+            <p>Saved by Students</p>
+        </div>
+
+    </section>
+
+
+    <!-- ================= HOW IT WORKS ================= -->
+
+    <section class="section" id="how">
+
+        <div class="section-title">
+
+            <h2>How BookLoop Works</h2>
+
+            <p>
+                Buying and selling used books is simple.
+            </p>
+
+        </div>
+
+
+        <div class="steps">
+
+            <div class="step">
+
+                <div class="step-number">
+                    1
+                </div>
+
+                <h3>List Your Book</h3>
+
+                <p>
+                    Upload photos, add the book details,
+                    choose its condition and set your price.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    2
+                </div>
+
+                <h3>Find a Buyer</h3>
+
+                <p>
+                    Students searching for your book can
+                    discover your listing and place an order.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    3
+                </div>
+
+                <h3>Sell & Earn</h3>
+
+                <p>
+                    Complete the transaction and earn money
+                    from books you no longer need.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= SELL CTA ================= -->
+
+    <section class="sell-section" id="sell">
+
+        <div>
+
+            <h2>
+                Have books collecting dust?
+            </h2>
+
+            <p>
+                Turn your old textbooks into money.
+                List your books and help another student
+                save money at the same time.
+            </p>
+
+        </div>
+
+        <a href="#" class="sell-btn">
+            Sell a Book →
+        </a>
+
+    </section>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <div class="footer-content">
+
+            <div class="footer-brand">
+
+                <a href="#" class="logo">
+                    Book<span>Loop</span>
+                </a>
+
+                <p>
+                    A student-focused marketplace for buying
+                    and selling affordable used books.
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h4>Marketplace</h4>
+
+                <a href="#books">Browse Books</a>
+                <a href="#categories">Categories</a>
+                <a href="#sell">Sell a Book</a>
+
+            </div>
+
+
+            <div>
+
+                <h4>Company</h4>
+
+                <a href="#">About Us</a>
+                <a href="#">Contact</a>
+                <a href="#">Help Center</a>
+
+            </div>
+
+
+            <div>
+
+                <h4>Legal</h4>
+
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms</a>
+                <a href="#">Refund Policy</a>
+
+            </div>
+
+        </div>
+
+
+        <div class="copyright">
+            © 2026 BookLoop. Built for students, by students.
+        </div>
+
+    </footer>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        function searchBooks() {
+
+            const search =
+                document.getElementById("searchInput").value.trim();
+
+            if (search === "") {
+
+                alert("Please enter a book name, author or ISBN.");
+
+                return;
+            }
+
+            alert("Searching for: " + search);
+
+        }
+
+    </script>
+
+</body>
+</html>
