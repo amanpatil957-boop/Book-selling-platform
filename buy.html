@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Buy Books - BookLoop</title>
+
+    <link rel="stylesheet" href="buy.css">
+
+</head>
+
+<body>
+
+
+    <!-- NAVBAR -->
+
+    <nav>
+
+        <h2>
+            📚 BookLoop
+        </h2>
+
+        <div>
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="sell.html">
+                Sell Books
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- MAIN -->
+
+    <main>
+
+        <div class="page-title">
+
+            <h1>
+                Buy Books 📚
+            </h1>
+
+            <p>
+                Find books uploaded by students.
+            </p>
+
+        </div>
+
+
+        <!-- BOOKS WILL APPEAR HERE -->
+
+        <div
+            id="bookList"
+            class="book-list"
+        >
+        </div>
+
+
+        <!-- EMPTY MESSAGE -->
+
+        <div
+            id="emptyMessage"
+            class="empty-message"
+        >
+
+            <div class="empty-icon">
+                📚
+            </div>
+
+            <h2>
+                No Books Available
+            </h2>
+
+            <p>
+                No books have been uploaded yet.
+            </p>
+
+            <a href="sell.html">
+                + Sell Your Book
+            </a>
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        function loadBooks() {
+
+            const books =
+                JSON.parse(
+                    localStorage.getItem("bookloopBooks")
+                ) || [];
+
+
+            const bookList =
+                document.getElementById("bookList");
+
+
+            const emptyMessage =
+                document.getElementById("emptyMessage");
+
+
+            bookList.innerHTML = "";
+
+
+            if (books.length === 0) {
+
+                emptyMessage.style.display = "block";
+
+                return;
+
+            }
+
+
+            emptyMessage.style.display = "none";
+
+
+            books.forEach(function (book, index) {
+
+                const card =
+                    document.createElement("div");
+
+                card.className = "book-card";
+
+
+                card.innerHTML = `
+
+                    <img
+                        src="${book.image}"
+                        alt="${book.name}"
+                    >
+
+                    <div class="book-info">
+
+                        <h2>
+                            ${book.name}
+                        </h2>
+
+                        <p class="author">
+                            Author: ${book.author}
+                        </p>
+
+                        <p class="description">
+                            ${book.description}
+                        </p>
+
+                        <div class="price">
+                            ₹${book.price}
+                        </div>
+
+                        <button
+                            class="buy-now"
+                            onclick="buyNow(${index})"
+                        >
+                            🛒 Buy Now
+                        </button>
+
+                    </div>
+
+                `;
+
+
+                bookList.appendChild(card);
+
+            });
+
+        }
+
+
+        function buyNow(index) {
+
+            const books =
+                JSON.parse(
+                    localStorage.getItem("bookloopBooks")
+                ) || [];
+
+
+            const book = books[index];
+
+
+            alert(
+                "You selected: " +
+                book.name +
+                "\n\nPrice: ₹" +
+                book.price +
+                "\n\nThank you for using BookLoop!"
+            );
+
+        }
+
+
+        loadBooks();
+
+    </script>
+
+</body>
+
+</html>
