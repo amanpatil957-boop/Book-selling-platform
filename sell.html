@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Sell Your Books - BookLoop</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="sell.css">
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <nav>
+
+        <h2>📚 BookLoop</h2>
+
+        <a href="index.html">
+            ← Back to Home
+        </a>
+
+    </nav>
+
+
+    <!-- PAGE -->
+
+    <main>
+
+        <div class="page-title">
+
+            <h1>Sell Your Books</h1>
+
+            <p>
+                Give your old books a new home and earn money.
+            </p>
+
+        </div>
+
+
+        <!-- ADD BOOK BUTTON -->
+
+        <button
+            class="add-book"
+            onclick="openForm()"
+        >
+
+            <span>+</span>
+
+            Sell Your Book
+
+        </button>
+
+
+        <!-- SELL FORM -->
+
+        <div
+            id="sellForm"
+            class="form-container"
+        >
+
+            <h2>List Your Book</h2>
+
+            <p class="form-subtitle">
+                Enter the details of your book.
+            </p>
+
+
+            <!-- IMAGE -->
+
+            <label>
+                Book Image
+            </label>
+
+            <input
+                type="file"
+                id="bookImage"
+                accept="image/*"
+            >
+
+            <div
+                id="imagePreview"
+                class="image-preview"
+            >
+            </div>
+
+
+            <!-- BOOK NAME -->
+
+            <label>
+                Book Name
+            </label>
+
+            <input
+                type="text"
+                id="bookName"
+                placeholder="Enter book name"
+            >
+
+
+            <!-- AUTHOR -->
+
+            <label>
+                Author
+            </label>
+
+            <input
+                type="text"
+                id="bookAuthor"
+                placeholder="Enter author name"
+            >
+
+
+            <!-- PRICE -->
+
+            <label>
+                Price
+            </label>
+
+            <input
+                type="number"
+                id="bookPrice"
+                placeholder="₹ Enter selling price"
+            >
+
+
+            <!-- DESCRIPTION -->
+
+            <label>
+                Book Information
+            </label>
+
+            <textarea
+                id="bookDescription"
+                placeholder="Enter information about the book, condition, edition, etc."
+            ></textarea>
+
+
+            <!-- BUTTONS -->
+
+            <div class="form-buttons">
+
+                <button
+                    class="cancel"
+                    onclick="closeForm()"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    class="submit"
+                    onclick="addBook()"
+                >
+                    + List My Book
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- LISTED BOOKS -->
+
+        <section>
+
+            <h2 class="listed-title">
+                Books For Sale
+            </h2>
+
+            <div
+                id="bookList"
+                class="book-list"
+            >
+
+                <p id="emptyMessage">
+                    No books listed yet.
+                    Click "+ Sell Your Book" to add one.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="sell.js"></script>
+
+</body>
+</html>
