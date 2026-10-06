@@ -1,130 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>BookLoop</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Haven - Book Selling Platform</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <nav>
-        <h2>📚 BookLoop</h2>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">📚 Book Haven</div>
 
-        <div>
-            <a href="#home">Home</a>
-            <a href="#books">Books</a>
-            <a href="#about">About</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="buy.html">Buy</a>
+            <a href="sell.html">Sell</a>
         </div>
     </nav>
 
 
-    <section id="home" class="hero">
+    <!-- Hero Section -->
+    <section class="hero">
 
-        <h1>Buy & Sell Used Books</h1>
+        <div class="hero-content">
 
-        <p>
-            Find affordable books from other students.
-        </p>
+            <h1>Welcome to Book Haven</h1>
 
-      
-        <button onclick="openPortal()">
-          Start Browsing
-         </button>
+            <p>
+                Buy and sell books easily.
+                Give your old books a new home and discover
+                your next favourite read.
+            </p>
 
-
-
-    </section>
-
-
-    <section id="books">
-
-        <h2>Popular Books</h2>
-
-        <div class="books">
-
-            <div class="book">
-                <h3>Data Structures</h3>
-                <p>Computer Science</p>
-                <strong>₹350</strong>
-                <br><br>
-                <button onclick="buyBook('Data Structures')">
-                    Buy
-                </button>
-            </div>
-
-
-            <div class="book">
-                <h3>Engineering Mathematics</h3>
-                <p>Engineering</p>
-                <strong>₹280</strong>
-                <br><br>
-                <button onclick="buyBook('Engineering Mathematics')">
-                    Buy
-                </button>
-            </div>
-
-
-            <div class="book">
-                <h3>Human Anatomy</h3>
-                <p>Medical</p>
-                <strong>₹600</strong>
-                <br><br>
-                <button onclick="buyBook('Human Anatomy')">
-                    Buy
-                </button>
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <section id="about">
-
-        <h2>About BookLoop</h2>
-
-        <p>
-            BookLoop is a simple marketplace where students
-            can buy and sell used books.
-        </p>
-
-    </section>
-
-
-    <footer>
-        <p>© 2026 BookLoop</p>
-    </footer>
-    <div id="portal" class="portal">
-
-    <div class="portal-box">
-
-        <h2>Welcome to BookLoop 📚</h2>
-
-        <p>What would you like to do?</p>
-
-        <div class="portal-options">
-
-            <button onclick="buyBooks()">
-                📖
-                <span>Buy Books</span>
-            </button>
-
-            <button onclick="sellBooks()">
-                💰
-                <span>Sell Books</span>
+            <button class="browse-btn" onclick="openBrowse()">
+                Start Browsing
             </button>
 
         </div>
 
-        <button class="close-btn" onclick="closePortal()">
-            Close
-        </button>
+    </section>
+
+
+    <!-- Browse Options -->
+    <div id="browseOptions" class="browse-container">
+
+        <div class="browse-box">
+
+            <button class="close-btn" onclick="closeBrowse()">
+                ×
+            </button>
+
+            <h2>What would you like to do?</h2>
+
+            <div class="options">
+
+                <div class="option-card">
+                    <div class="option-icon">🛒</div>
+
+                    <h3>Buy Books</h3>
+
+                    <p>
+                        Browse books listed by other sellers.
+                    </p>
+
+                    <button onclick="goToBuy()">
+                        Buy Books
+                    </button>
+                </div>
+
+
+                <div class="option-card">
+                    <div class="option-icon">📖</div>
+
+                    <h3>Sell Books</h3>
+
+                    <p>
+                        List your books and sell them to others.
+                    </p>
+
+                    <button onclick="goToSell()">
+                        Sell Books
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
-
-</div>
-
 
 
     <script src="script.js"></script>

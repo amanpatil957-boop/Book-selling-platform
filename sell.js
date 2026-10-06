@@ -1,192 +1,151 @@
-let selectedImage = "";
+const bookForm = document.getElementById("bookForm");
 
 
-/* OPEN FORM */
+// When form is submitted
 
-function openForm() {
+bookForm.addEventListener("submit", function(event) {
 
-    document
-        .getElementById("sellForm")
-        .classList.add("show");
-
-}
+    event.preventDefault();
 
 
-/* CLOSE FORM */
+    const bookName =
+        document.getElementById("bookName").value;
 
-function closeForm() {
+    const bookPrice =
+        document.getElementById("bookPrice").value;
 
-    document
-        .getElementById("sellForm")
-        .classList.remove("show");
-
-}
+    const imageInput =
+        document.getElementById("bookImage");
 
 
-/* IMAGE PREVIEW */
+    // Make sure image exists
 
-document
-    .getElementById("bookImage")
-    .addEventListener("change", function(event) {
+    if (imageInput.files.length === 0) {
 
-        const file = event.target.files[0];
+        alert("Please select a book image.");
 
-        if (!file) {
-            return;
-        }
+        return;
+    }
 
-        const reader = new FileReader();
 
-        reader.onload = function(e) {
+    const imageFile = imageInput.files[0];
 
-            selectedImage = e.target.result;
 
-            document
-                .getElementById("imagePreview")
-                .innerHTML =
-                `<img src="${selectedImage}">`;
+    // Convert image to Base64
+
+    const reader = new FileReader();
+
+
+    reader.onload = function() {
+
+        const book = {
+
+            id: Date.now(),
+
+            name: bookName,
+
+            price: bookPrice,
+
+            image: reader.result
 
         };
 
-        reader.readAsDataURL(file);
+
+        // Get existing books
+
+        let books =
+            JSON.parse(localStorage.getItem("books")) || [];
+
+
+        // Add new book
+
+        books.push(book);
+
+
+        // Save books
+
+        localStorage.setItem(
+            "books",
+            JSON.stringify(books)
+        );
+
+
+        alert("Book added successfully!");
+
+
+        // Reset form
+
+        bookForm.reset();
+
+
+        // Display seller's books
+
+        displaySellerBooks();
+
+    };
+
+
+    reader.readAsDataURL(imageFile);
+
+});
+
+
+
+/* Display books on seller page */
+
+function displaySellerBooks() {
+
+    const sellerBooks =
+        document.getElementById("sellerBooks");
+
+
+    const books =
+        JSON.parse(localStorage.getItem("books")) || [];
+
+
+    sellerBooks.innerHTML = "";
+
+
+    if (books.length === 0) {
+
+        sellerBooks.innerHTML =
+            "<p>No books listed yet.</p>";
+
+        return;
+    }
+
+
+    books.forEach(function(book) {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "seller-book-card";
+
+
+        card.innerHTML = `
+
+            <img src="${book.image}" alt="${book.name}">
+
+            <div class="book-info">
+
+                <h3>${book.name}</h3>
+
+                <p>₹${book.price}</p>
+
+            </div>
+
+        `;
+
+
+        sellerBooks.appendChild(card);
 
     });
 
-
-/* ADD BOOK */
-
-function addBook() {
-
-    const name =
-        document
-            .getElementById("bookName")
-            .value
-            .trim();
-
-
-    const author =
-        document
-            .getElementById("bookAuthor")
-            .value
-            .trim();
-
-
-    const price =
-        document
-            .getElementById("bookPrice")
-            .value
-            .trim();
-
-
-    const description =
-        document
-            .getElementById("bookDescription")
-            .value
-            .trim();
-
-
-    if (
-        name === "" ||
-        author === "" ||
-        price === "" ||
-        description === ""
-    ) {
-
-        alert("Please fill in all the information.");
-
-        return;
-
-    }
-
-
-    if (selectedImage === "") {
-
-        alert("Please upload an image of your book.");
-
-        return;
-
-    }
-
-
-    const bookList =
-        document.getElementById("bookList");
-
-
-    const emptyMessage =
-        document.getElementById("emptyMessage");
-
-
-    if (emptyMessage) {
-        emptyMessage.remove();
-    }
-
-
-    const card =
-        document.createElement("div");
-
-    card.className = "book-card";
-
-
-    card.innerHTML = `
-
-        <img src="${selectedImage}">
-
-        <div class="book-info">
-
-            <h3>${name}</h3>
-
-            <p class="book-author">
-                Author: ${author}
-            </p>
-
-            <p class="book-price">
-                ₹${price}
-            </p>
-
-            <p class="book-description">
-                ${description}
-            </p>
-
-        </div>
-
-    `;
-
-
-    bookList.appendChild(card);
-
-
-    /* CLEAR FORM */
-
-    document
-        .getElementById("bookName")
-        .value = "";
-
-    document
-        .getElementById("bookAuthor")
-        .value = "";
-
-    document
-        .getElementById("bookPrice")
-        .value = "";
-
-    document
-        .getElementById("bookDescription")
-        .value = "";
-
-    document
-        .getElementById("bookImage")
-        .value = "";
-
-    document
-        .getElementById("imagePreview")
-        .innerHTML = "";
-
-    selectedImage = "";
-
-
-    closeForm();
-
-
-    alert("Your book has been listed successfully! 📚");
-
 }
+
+
+// Load books when page opens
+
+displaySellerBooks();

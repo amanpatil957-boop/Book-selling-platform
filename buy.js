@@ -1,39 +1,37 @@
-/* GET BOOKS FROM LOCAL STORAGE */
-
-const books =
-    JSON.parse(
-        localStorage.getItem("bookloopBooks")
-    ) || [];
-
-
-const bookList =
-    document.getElementById("bookList");
-
+const booksContainer =
+    document.getElementById("booksContainer");
 
 const noBooks =
     document.getElementById("noBooks");
 
 
-/* SHOW BOOKS */
+// Load books
 
 function displayBooks() {
 
-    bookList.innerHTML = "";
+    const books =
+        JSON.parse(localStorage.getItem("books")) || [];
 
+
+    booksContainer.innerHTML = "";
+
+
+    // If there are no books
 
     if (books.length === 0) {
 
         noBooks.style.display = "block";
 
         return;
-
     }
 
 
     noBooks.style.display = "none";
 
 
-    books.forEach(function(book, index) {
+    // Display every book
+
+    books.forEach(function(book) {
 
         const card =
             document.createElement("div");
@@ -48,29 +46,22 @@ function displayBooks() {
                 alt="${book.name}"
             >
 
-            <div class="book-info">
+            <div class="book-details">
 
                 <h2>
                     ${book.name}
                 </h2>
 
-                <p class="author">
-                    Author: ${book.author}
-                </p>
-
-                <p class="description">
-                    ${book.description}
-                </p>
-
-                <div class="price">
+                <p class="price">
                     ₹${book.price}
-                </div>
+                </p>
 
                 <button
-                    class="buy-button"
-                    onclick="buyNow(${index})"
-                >
-                    🛒 Buy Now
+                    class="buy-btn"
+                    onclick="buyBook('${book.name}')">
+
+                    Buy Now
+
                 </button>
 
             </div>
@@ -78,29 +69,26 @@ function displayBooks() {
         `;
 
 
-        bookList.appendChild(card);
+        booksContainer.appendChild(card);
 
     });
 
 }
 
 
-/* BUY NOW */
+// Buy button
 
-function buyNow(index) {
-
-    const book = books[index];
-
+function buyBook(bookName) {
 
     alert(
-        "You selected:\n\n" +
-        book.name +
-        "\n\nPrice: ₹" +
-        book.price +
-        "\n\nThe seller can contact you to complete the purchase."
+        "You selected: " +
+        bookName +
+        "\n\nThank you for choosing Book Haven!"
     );
 
 }
 
+
+// Run when page loads
 
 displayBooks();

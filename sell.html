@@ -1,187 +1,145 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
 
-    <title>Sell Your Books - BookLoop</title>
+    <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Sell a Book - Book Haven</title>
 
     <link rel="stylesheet" href="sell.css">
 
 </head>
 
+
 <body>
 
-    <!-- NAVBAR -->
+    <!-- Navigation -->
 
-    <nav>
+    <nav class="navbar">
 
-        <h2>📚 BookLoop</h2>
+        <div class="logo">
+            📚 Book Haven
+        </div>
 
-        <a href="index.html">
-            ← Back to Home
-        </a>
+        <div class="nav-links">
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="buy.html">
+                Buy
+            </a>
+
+            <a href="sell.html">
+                Sell
+            </a>
+
+        </div>
 
     </nav>
 
 
-    <!-- PAGE -->
+    <!-- Sell Section -->
 
-    <main>
+    <main class="sell-page">
 
-        <div class="page-title">
+        <div class="sell-container">
 
-            <h1>Sell Your Books</h1>
+            <h1>Sell Your Book</h1>
 
-            <p>
-                Give your old books a new home and earn money.
-            </p>
-
-        </div>
-
-
-        <!-- ADD BOOK BUTTON -->
-
-        <button
-            class="add-book"
-            onclick="openForm()"
-        >
-
-            <span>+</span>
-
-            Sell Your Book
-
-        </button>
-
-
-        <!-- SELL FORM -->
-
-        <div
-            id="sellForm"
-            class="form-container"
-        >
-
-            <h2>List Your Book</h2>
-
-            <p class="form-subtitle">
-                Enter the details of your book.
+            <p class="subtitle">
+                Add your book details below.
             </p>
 
 
-            <!-- IMAGE -->
+            <form id="bookForm">
 
-            <label>
-                Book Image
-            </label>
+                <!-- Image -->
 
-            <input
-                type="file"
-                id="bookImage"
-                accept="image/*"
-            >
+                <div class="form-group">
 
-            <div
-                id="imagePreview"
-                class="image-preview"
-            >
-            </div>
+                    <label for="bookImage">
+                        Book Image
+                    </label>
 
+                    <input
+                        type="file"
+                        id="bookImage"
+                        accept="image/*"
+                        required
+                    >
 
-            <!-- BOOK NAME -->
-
-            <label>
-                Book Name
-            </label>
-
-            <input
-                type="text"
-                id="bookName"
-                placeholder="Enter book name"
-            >
+                </div>
 
 
-            <!-- AUTHOR -->
+                <!-- Book Name -->
 
-            <label>
-                Author
-            </label>
+                <div class="form-group">
 
-            <input
-                type="text"
-                id="bookAuthor"
-                placeholder="Enter author name"
-            >
+                    <label for="bookName">
+                        Book Name
+                    </label>
 
+                    <input
+                        type="text"
+                        id="bookName"
+                        placeholder="Enter book name"
+                        required
+                    >
 
-            <!-- PRICE -->
-
-            <label>
-                Price
-            </label>
-
-            <input
-                type="number"
-                id="bookPrice"
-                placeholder="₹ Enter selling price"
-            >
+                </div>
 
 
-            <!-- DESCRIPTION -->
+                <!-- Price -->
 
-            <label>
-                Book Information
-            </label>
+                <div class="form-group">
 
-            <textarea
-                id="bookDescription"
-                placeholder="Enter information about the book, condition, edition, etc."
-            ></textarea>
+                    <label for="bookPrice">
+                        Price (₹)
+                    </label>
 
+                    <input
+                        type="number"
+                        id="bookPrice"
+                        placeholder="Enter price"
+                        min="1"
+                        required
+                    >
 
-            <!-- BUTTONS -->
+                </div>
 
-            <div class="form-buttons">
 
                 <button
-                    class="cancel"
-                    onclick="closeForm()"
-                >
-                    Cancel
+                    type="submit"
+                    class="submit-btn">
+
+                    Add Book
+
                 </button>
 
-                <button
-                    class="submit"
-                    onclick="addBook()"
-                >
-                    + List My Book
-                </button>
+            </form>
+
+
+            <!-- Added books -->
+
+            <div class="my-books">
+
+                <h2>
+                    Your Listed Books
+                </h2>
+
+                <div id="sellerBooks">
+
+                </div>
 
             </div>
 
         </div>
-
-
-        <!-- LISTED BOOKS -->
-
-        <section>
-
-            <h2 class="listed-title">
-                Books For Sale
-            </h2>
-
-            <div
-                id="bookList"
-                class="book-list"
-            >
-
-                <p id="emptyMessage">
-                    No books listed yet.
-                    Click "+ Sell Your Book" to add one.
-                </p>
-
-            </div>
-
-        </section>
 
     </main>
 
@@ -189,4 +147,5 @@
     <script src="sell.js"></script>
 
 </body>
+
 </html>

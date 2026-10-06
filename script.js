@@ -1,40 +1,18 @@
-function openPortal() {
-
-    document.getElementById("portal").style.display = "flex";
-
+function openBrowse() {
+    document.getElementById("browseOptions").style.display = "flex";
 }
 
 
-function closePortal() {
-
-    document.getElementById("portal").style.display = "none";
-
+function closeBrowse() {
+    document.getElementById("browseOptions").style.display = "none";
 }
 
 
-function buyBooks() {
-
-    closePortal();
-
-    document.getElementById("books").scrollIntoView({
-        behavior: "smooth"
-    });
-
+function goToBuy() {
+    window.location.href = "buy.html";
 }
 
 
-function sellBooks() {
+function goToSell() {
     window.location.href = "sell.html";
-}
-
-
-
-function buyBook(bookName) {
-
-    alert(
-        "You selected: " +
-        bookName +
-        "\n\nThank you for using BookLoop!"
-    );
-
 }
