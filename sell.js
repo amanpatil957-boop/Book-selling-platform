@@ -1,3 +1,11 @@
+if (!localStorage.getItem("currentUser")) {
+
+    alert("Please login first.");
+
+    window.location.href = "auth.html";
+
+}
+
 const bookForm = document.getElementById("bookForm");
 
 

@@ -9,19 +9,6 @@
 </head>
 
 <body>
-
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="logo">📚 Book Haven</div>
-
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="buy.html">Buy</a>
-            <a href="sell.html">Sell</a>
-        </div>
-    </nav>
-
-
     <!-- Hero Section -->
     <section class="hero">
 
@@ -29,6 +16,34 @@
 
             <h1>Welcome to Book Haven</h1>
 
+            
+<nav class="navbar">
+
+    <div class="logo">
+        📚 Book Haven
+    </div>
+
+    <div class="nav-links">
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="buy.html">
+            Buy
+        </a>
+
+        <a href="sell.html">
+            Sell
+        </a>
+
+        <a href="auth.html" id="authLink">
+            Login
+        </a>
+
+    </div>
+
+</nav>
             <p>
                 Buy and sell books easily.
                 Give your old books a new home and discover
@@ -94,6 +109,8 @@
 
 
     <script src="script.js"></script>
-
+<script>
+    updateNavbar();
+    </script>
 </body>
 </html>
