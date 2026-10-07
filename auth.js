@@ -1,39 +1,35 @@
-```javascript
-/* =========================
-   SHOW LOGIN
-========================= */
-
-function showLogin() {
-
-    document.getElementById("loginSection").style.display =
-        "block";
-
-    document.getElementById("signupSection").style.display =
-        "none";
-}
+console.log("AUTH JS LOADED");
 
 
-/* =========================
-   SHOW SIGNUP
-========================= */
+// ===============================
+// SHOW SIGN UP
+// ===============================
 
 function showSignup() {
 
-    document.getElementById("loginSection").style.display =
-        "none";
+    document.getElementById("loginSection").style.display = "none";
 
-    document.getElementById("signupSection").style.display =
-        "block";
+    document.getElementById("signupSection").style.display = "block";
 }
 
 
-/* =========================
-   SIGNUP
-========================= */
+// ===============================
+// SHOW LOGIN
+// ===============================
 
-const signupForm =
-    document.getElementById("signupForm");
+function showLogin() {
 
+    document.getElementById("signupSection").style.display = "none";
+
+    document.getElementById("loginSection").style.display = "block";
+}
+
+
+// ===============================
+// SIGN UP
+// ===============================
+
+const signupForm = document.getElementById("signupForm");
 
 signupForm.addEventListener("submit", function(event) {
 
@@ -43,22 +39,19 @@ signupForm.addEventListener("submit", function(event) {
     const name =
         document.getElementById("signupName").value.trim();
 
-
     const email =
         document.getElementById("signupEmail").value
         .trim()
         .toLowerCase();
 
-
     const password =
         document.getElementById("signupPassword").value;
-
 
     const confirmPassword =
         document.getElementById("confirmPassword").value;
 
 
-    /* Check password */
+    // Check passwords
 
     if (password !== confirmPassword) {
 
@@ -68,33 +61,32 @@ signupForm.addEventListener("submit", function(event) {
     }
 
 
-    /* Get existing users */
+    // Get existing users
 
     let users =
         JSON.parse(localStorage.getItem("users")) || [];
 
 
-    /* Check existing email */
+    // Check if email already exists
 
-    const existingUser =
-        users.find(function(user) {
+    const existingUser = users.find(function(user) {
 
-            return user.email === email;
+        return user.email === email;
 
-        });
+    });
 
 
     if (existingUser) {
 
-        alert("An account with this email already exists.");
+        alert("This email is already registered.");
 
         return;
     }
 
 
-    /* Create user */
+    // Create new user
 
-    const user = {
+    const newUser = {
 
         id: Date.now(),
 
@@ -107,10 +99,9 @@ signupForm.addEventListener("submit", function(event) {
     };
 
 
-    users.push(user);
+    // Save user
 
-
-    /* Save users */
+    users.push(newUser);
 
     localStorage.setItem(
         "users",
@@ -118,27 +109,26 @@ signupForm.addEventListener("submit", function(event) {
     );
 
 
-    alert(
-        "Account created successfully! Please login."
-    );
+    alert("Account created successfully!");
 
+
+    // Clear signup form
 
     signupForm.reset();
 
+
+    // Show login
 
     showLogin();
 
 });
 
 
+// ===============================
+// LOGIN
+// ===============================
 
-/* =========================
-   LOGIN
-========================= */
-
-const loginForm =
-    document.getElementById("loginForm");
-
+const loginForm = document.getElementById("loginForm");
 
 loginForm.addEventListener("submit", function(event) {
 
@@ -150,39 +140,39 @@ loginForm.addEventListener("submit", function(event) {
         .trim()
         .toLowerCase();
 
-
     const password =
         document.getElementById("loginPassword").value;
 
 
-    /* Get users */
+    // Get registered users
 
     const users =
         JSON.parse(localStorage.getItem("users")) || [];
 
 
-    /* Find user */
+    // Find matching user
 
-    const user =
-        users.find(function(user) {
+    const user = users.find(function(user) {
 
-            return user.email === email &&
-                   user.password === password;
+        return (
+            user.email === email &&
+            user.password === password
+        );
 
-        });
+    });
 
+
+    // User not found
 
     if (!user) {
 
-        alert(
-            "Invalid email or password."
-        );
+        alert("Invalid email or password.");
 
         return;
     }
 
 
-    /* Save logged-in user */
+    // Save logged-in user
 
     localStorage.setItem(
         "currentUser",
@@ -191,14 +181,12 @@ loginForm.addEventListener("submit", function(event) {
 
 
     alert(
-        "Login successful! Welcome " +
-        user.name
+        "Login successful! Welcome " + user.name
     );
 
 
-    /* Go to home */
+    // Go to home page
 
     window.location.href = "index.html";
 
 });
-```

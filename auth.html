@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,7 +15,6 @@
 
 </head>
 
-
 <body>
 
     <div class="auth-container">
@@ -27,7 +26,7 @@
             </div>
 
 
-            <!-- Login -->
+            
 
             <div id="loginSection">
 
@@ -37,12 +36,13 @@
                     Login to continue
                 </p>
 
-
                 <form id="loginForm">
 
                     <div class="form-group">
 
-                        <label>Email</label>
+                        <label for="loginEmail">
+                            Email
+                        </label>
 
                         <input
                             type="email"
@@ -55,7 +55,9 @@
 
                     <div class="form-group">
 
-                        <label>Password</label>
+                        <label for="loginPassword">
+                            Password
+                        </label>
 
                         <input
                             type="password"
@@ -66,8 +68,9 @@
                     </div>
 
 
-                    <button type="submit"
-                            class="auth-btn">
+                    <button
+                        type="submit"
+                        class="auth-btn">
 
                         Login
 
@@ -80,8 +83,12 @@
 
                     Don't have an account?
 
-                    <button onclick="showSignup()">
+                    <button
+                        type="button"
+                        onclick="showSignup()">
+
                         Sign Up
+
                     </button>
 
                 </p>
@@ -90,10 +97,9 @@
 
 
 
-            <!-- Signup -->
 
             <div id="signupSection"
-                 style="display:none;">
+                 style="display: none;">
 
                 <h1>Create Account</h1>
 
@@ -104,10 +110,11 @@
 
                 <form id="signupForm">
 
-
                     <div class="form-group">
 
-                        <label>Name</label>
+                        <label for="signupName">
+                            Name
+                        </label>
 
                         <input
                             type="text"
@@ -120,7 +127,9 @@
 
                     <div class="form-group">
 
-                        <label>Email</label>
+                        <label for="signupEmail">
+                            Email
+                        </label>
 
                         <input
                             type="email"
@@ -133,7 +142,9 @@
 
                     <div class="form-group">
 
-                        <label>Password</label>
+                        <label for="signupPassword">
+                            Password
+                        </label>
 
                         <input
                             type="password"
@@ -147,7 +158,9 @@
 
                     <div class="form-group">
 
-                        <label>Confirm Password</label>
+                        <label for="confirmPassword">
+                            Confirm Password
+                        </label>
 
                         <input
                             type="password"
@@ -158,8 +171,9 @@
                     </div>
 
 
-                    <button type="submit"
-                            class="auth-btn">
+                    <button
+                        type="submit"
+                        class="auth-btn">
 
                         Create Account
 
@@ -172,8 +186,12 @@
 
                     Already have an account?
 
-                    <button onclick="showLogin()">
+                    <button
+                        type="button"
+                        onclick="showLogin()">
+
                         Login
+
                     </button>
 
                 </p>
@@ -185,9 +203,11 @@
     </div>
 
 
+  
+
     <script src="auth.js"></script>
 
 </body>
 
 </html>
-```
+
