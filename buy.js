@@ -1,102 +1,121 @@
+
+/* =========================
+   CHECK LOGIN
+========================= */
+
 if (!localStorage.getItem("currentUser")) {
-
     alert("Please login first.");
-
     window.location.href = "auth.html";
-
 }
 
-const booksContainer =
-    document.getElementById("booksContainer");
 
-const noBooks =
-    document.getElementById("noBooks");
+/* =========================
+   ELEMENTS
+========================= */
 
-
-// Load books
-
-function displayBooks() {
-
-    const books =
-        JSON.parse(localStorage.getItem("books")) || [];
+const booksContainer = document.getElementById("booksContainer");
+const noBooks = document.getElementById("noBooks");
 
 
-    booksContainer.innerHTML = "";
+/* =========================
+   LOAD BOOKS FROM MONGODB
+========================= */
 
-
-    // If there are no books
-
-    if (books.length === 0) {
-
-        noBooks.style.display = "block";
-
+async function displayBooks() {
+    if (!booksContainer) {
+        console.error("booksContainer not found in buy.html");
         return;
     }
 
+    booksContainer.innerHTML = "<p>Loading books...</p>";
 
-    noBooks.style.display = "none";
+    try {
+        const response = await fetch("/api/books");
 
+        if (!response.ok) {
+            throw new Error("Failed to load books from server");
+        }
 
-    // Display every book
+        const books = await response.json();
 
-    books.forEach(function(book) {
+        booksContainer.innerHTML = "";
 
-        const card =
-            document.createElement("div");
+        // Handle an empty book list
+        if (!books || books.length === 0) {
+            if (noBooks) {
+                noBooks.style.display = "block";
+            } else {
+                booksContainer.textContent = "No books available yet.";
+            }
+            return;
+        }
 
-        card.className = "book-card";
+        if (noBooks) {
+            noBooks.style.display = "none";
+        }
 
+        // Display every available book
+        books.forEach(function (book) {
+            const card = document.createElement("div");
+            card.className = "book-card";
 
-        card.innerHTML = `
+            const image = document.createElement("img");
+            image.src = book.image || "";
+            image.alt = book.name || "Book";
+            image.loading = "lazy";
 
-            <img
-                src="${book.image}"
-                alt="${book.name}"
-            >
+            const details = document.createElement("div");
+            details.className = "book-details";
 
-            <div class="book-details">
+            const title = document.createElement("h2");
+            title.textContent = book.name;
 
-                <h2>
-                    ${book.name}
-                </h2>
+            const price = document.createElement("p");
+            price.className = "price";
+            price.textContent = "₹" + book.price;
 
-                <p class="price">
-                    ₹${book.price}
-                </p>
+            const button = document.createElement("button");
+            button.className = "buy-btn";
+            button.textContent = "Buy Now";
 
-                <button
-                    class="buy-btn"
-                    onclick="buyBook('${book.name}')">
+            button.addEventListener("click", function () {
+                buyBook(book.name);
+            });
 
-                    Buy Now
+            details.appendChild(title);
+            details.appendChild(price);
+            details.appendChild(button);
 
-                </button>
+            card.appendChild(image);
+            card.appendChild(details);
 
-            </div>
+            booksContainer.appendChild(card);
+        });
 
-        `;
+    } catch (error) {
+        console.error("Error loading books:", error);
 
-
-        booksContainer.appendChild(card);
-
-    });
-
+        booksContainer.innerHTML =
+            "<p>Unable to load books. Please refresh the page.</p>";
+    }
 }
 
 
-// Buy button
+/* =========================
+   BUY BUTTON
+========================= */
 
 function buyBook(bookName) {
-
     alert(
         "You selected: " +
         bookName +
         "\n\nThank you for choosing Book Haven!"
     );
-
 }
 
 
-// Run when page loads
+/* =========================
+   RUN WHEN PAGE LOADS
+========================= */
 
 displayBooks();

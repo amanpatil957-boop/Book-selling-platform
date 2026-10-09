@@ -1,0 +1,26 @@
+{
+  "name": "book-selling-platform",
+  "version": "1.0.0",
+  "description": "the assignments that we buy for subjects in college it helps to sell them in price and other student can buy it ...\r <br>\r it is basically for college subject asssignments selling rather than keeping the assignments we can help juniors side by side earn money",
+  "main": "auth.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amanpatil957-boop/Book-selling-platform.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/amanpatil957-boop/Book-selling-platform/issues"
+  },
+  "homepage": "https://github.com/amanpatil957-boop/Book-selling-platform#readme",
+  "dependencies": {
+    "dotenv": "^18.0.6",
+    "express": "^5.2.1",
+    "mongoose": "^9.11.1"
+  }
+}
