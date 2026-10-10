@@ -10,12 +10,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-// Supports Base64 book images in JSON requests.
-// Keep image files reasonably small.
+// Supports Base64 images in JSON requests.
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-// Serve HTML, CSS, JavaScript and other frontend files
+// Serve frontend files: HTML, CSS, JavaScript, images
 app.use(express.static(__dirname));
 
 // Test backend
@@ -32,7 +31,7 @@ app.get("/api/books", async (req, res) => {
             status: "available"
         }).sort({ createdAt: -1 });
 
-        res.json(books);
+        res.status(200).json(books);
     } catch (error) {
         console.error("Error fetching books:", error.message);
 
@@ -53,43 +52,57 @@ app.post("/api/books", async (req, res) => {
             sellerEmail
         } = req.body;
 
-        // Validate required fields
+        // Validate book name
+        if (typeof name !== "string" || !name.trim()) {
+            return res.status(400).json({
+                message: "Book name is required"
+            });
+        }
+
+        // Validate price
         if (
-            typeof name !== "string" ||
-            !name.trim() ||
             price === undefined ||
+            price === null ||
             price === ""
         ) {
             return res.status(400).json({
-                message: "Book name and price are required"
+                message: "Book price is required"
             });
         }
 
         const numericPrice = Number(price);
 
-        if (
-            !Number.isFinite(numericPrice) ||
-            numericPrice < 0
-        ) {
+        if (!Number.isFinite(numericPrice) || numericPrice < 0) {
             return res.status(400).json({
                 message: "Please enter a valid, non-negative price"
             });
         }
 
-        // Save book in MongoDB
+        // Validate optional text fields
+        if (
+            (image !== undefined && typeof image !== "string") ||
+            (sellerName !== undefined && typeof sellerName !== "string") ||
+            (sellerEmail !== undefined && typeof sellerEmail !== "string")
+        ) {
+            return res.status(400).json({
+                message: "Image and seller details must be text"
+            });
+        }
+
+        // Create and save book
         const book = await Book.create({
             name: name.trim(),
             price: numericPrice,
             image: image || "",
             sellerName: sellerName || "",
-            sellerEmail: sellerEmail || ""
+            sellerEmail: sellerEmail || "",
+            status: "available"
         });
 
-        res.status(201).json({
+        return res.status(201).json({
             message: "Book added successfully!",
             book
         });
-
     } catch (error) {
         console.error("Error saving book:", error.message);
 
@@ -100,7 +113,7 @@ app.post("/api/books", async (req, res) => {
             });
         }
 
-        res.status(500).json({
+        return res.status(500).json({
             message: "Failed to save book"
         });
     }
@@ -111,6 +124,17 @@ app.use("/api", (req, res) => {
     res.status(404).json({
         message: "API route not found"
     });
+});
+
+// Handle invalid JSON requests
+app.use((error, req, res, next) => {
+    if (error instanceof SyntaxError && error.status === 400 && "body" in error) {
+        return res.status(400).json({
+            message: "Invalid JSON request body"
+        });
+    }
+
+    next(error);
 });
 
 // Start server after connecting to MongoDB
@@ -131,7 +155,6 @@ async function startServer() {
                 `Book Haven running at http://localhost:${PORT}`
             );
         });
-
     } catch (error) {
         console.error("Startup failed:", error.message);
         process.exitCode = 1;
