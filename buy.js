@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function () {
     const booksContainer = document.getElementById("booksContainer");
     const noBooks = document.getElementById("noBooks");
@@ -18,7 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const books = await response.json();
-
             booksContainer.innerHTML = "";
 
             if (noBooks) {
@@ -27,7 +27,13 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             if (books.length === 0) {
-                booksContainer.innerHTML = "<p>No books are available right now.</p>";
+                if (noBooks) {
+                    noBooks.hidden = false;
+                    noBooks.style.display = "block";
+                } else {
+                    booksContainer.innerHTML =
+                        "<p>No books are available right now.</p>";
+                }
                 return;
             }
 
@@ -36,21 +42,37 @@ document.addEventListener("DOMContentLoaded", function () {
                 card.className = "book-card";
 
                 const img = document.createElement("img");
-                img.src = book.image || "";
+                const placeholder =
+                    "https://placehold.co/300x400?text=Book";
+
+                img.src = book.image || placeholder;
                 img.alt = book.name || "Book";
                 img.className = "book-image";
 
+                img.onerror = function () {
+                    this.onerror = null;
+                    this.src = placeholder;
+                };
+
+                const details = document.createElement("div");
+                details.className = "book-details";
+
                 const title = document.createElement("h3");
+                title.className = "book-title";
                 title.textContent = book.name || "Untitled Book";
 
                 const price = document.createElement("p");
-                price.textContent = "₹" + book.price;
                 price.className = "book-price";
+                price.textContent =
+                    "₹" + Number(book.price || 0).toLocaleString("en-IN");
 
                 const seller = document.createElement("p");
-                seller.textContent = "Seller: " + (book.sellerName || "Not provided");
+                seller.className = "book-seller";
+                seller.textContent =
+                    "Seller: " + (book.sellerName || "Not provided");
 
                 const buyButton = document.createElement("button");
+                buyButton.type = "button";
                 buyButton.textContent = "Buy Now";
                 buyButton.className = "buy-button";
 
@@ -58,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     const currentUser = localStorage.getItem("currentUser");
 
                     if (!currentUser) {
-                        alert("Please login first.");
+                        alert("Please log in first.");
                         window.location.href = "auth.html";
                         return;
                     }
@@ -75,8 +97,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         } else {
                             buyerName = String(user || "");
                         }
-                    } catch {
-                        buyerName = currentUser;
+                    } catch (error) {
+                        console.error("Could not read logged-in user:", error);
                     }
 
                     const enteredName = prompt(
@@ -94,10 +116,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         buyerEmail
                     );
 
-                    if (
-                        !enteredEmail ||
-                        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(enteredEmail.trim())
-                    ) {
+                    const email = enteredEmail
+                        ? enteredEmail.trim().toLowerCase()
+                        : "";
+
+                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                         alert("Please enter a valid email address.");
                         return;
                     }
@@ -113,8 +136,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         "Confirm your order?\n\n" +
                         "Book: " + book.name + "\n" +
                         "Price: ₹" + book.price + "\n" +
-                        "Seller: " + (book.sellerName || "Not provided") + "\n\n" +
-                        "Payment: In person\n" +
+                        "Seller: " + (book.sellerName || "Not provided") +
+                        "\n\nPayment: In person\n" +
                         "Collection: Contact the seller\n\n" +
                         "No online payment will be made."
                     );
@@ -135,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             body: JSON.stringify({
                                 bookId: book._id,
                                 buyerName: enteredName.trim(),
-                                buyerEmail: enteredEmail.trim(),
+                                buyerEmail: email,
                                 buyerPhone: buyerPhone.trim()
                             })
                         });
@@ -148,20 +171,31 @@ document.addEventListener("DOMContentLoaded", function () {
                             );
                         }
 
+                        const order = result.order || {};
+
                         let message =
                             "Order request created successfully!\n\n" +
-                            "Book: " + result.order.bookName + "\n" +
-                            "Price: ₹" + result.order.price + "\n" +
-                            "Order ID: " + result.order.id + "\n\n" +
-                            "Please contact the seller to arrange collection " +
-                            "and payment in person.";
+                            "Book: " + (order.bookName || book.name) + "\n" +
+                            "Price: ₹" + (order.price ?? book.price) + "\n" +
+                            "Order ID: " +
+                            (order.id || order._id || "Created") +
+                            "\n\nPlease contact the seller to arrange " +
+                            "collection and payment in person.";
 
-                        if (result.order.sellerEmail) {
-                            message +=
-                                "\nSeller email: " + result.order.sellerEmail;
+                        if (order.sellerEmail) {
+                            message += "\nSeller email: " + order.sellerEmail;
                         }
 
                         alert(message);
+
+                        const openCart = confirm(
+                            "Would you like to view your orders now?"
+                        );
+
+                        if (openCart) {
+                            window.location.href = "cart.html";
+                            return;
+                        }
 
                         await loadBooks();
                     } catch (error) {
@@ -173,12 +207,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 });
 
-                card.appendChild(img);
-                card.appendChild(title);
-                card.appendChild(price);
-                card.appendChild(seller);
-                card.appendChild(buyButton);
+                details.appendChild(title);
+                details.appendChild(price);
+                details.appendChild(seller);
+                details.appendChild(buyButton);
 
+                card.appendChild(img);
+                card.appendChild(details);
                 booksContainer.appendChild(card);
             });
         } catch (error) {

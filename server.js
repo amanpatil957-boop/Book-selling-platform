@@ -1,9 +1,11 @@
+
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 
 const Book = require("./models/Book");
 const Order = require("./models/Order");
+const path = require("path");
 
 dotenv.config();
 
@@ -15,6 +17,7 @@ const PORT = process.env.PORT || 3000;
 // ========================================
 
 app.use(express.json({ limit: "10mb" }));
+app.use(express.static(__dirname));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Serve frontend HTML, CSS, JavaScript and images
@@ -25,7 +28,7 @@ app.use(express.static(__dirname));
 // ========================================
 
 app.get("/api/health", (req, res) => {
-    res.json({
+    res.status(200).json({
         message: "Book Haven backend is running!"
     });
 });
@@ -45,7 +48,7 @@ app.get("/api/books", async (req, res) => {
         console.error("Error fetching books:", error);
 
         return res.status(500).json({
-            message: "Failed to fetch books"
+            message: "Failed to fetch books."
         });
     }
 });
@@ -66,13 +69,17 @@ app.post("/api/books", async (req, res) => {
 
         if (typeof name !== "string" || !name.trim()) {
             return res.status(400).json({
-                message: "Book name is required"
+                message: "Book name is required."
             });
         }
 
-        if (price === undefined || price === null || price === "") {
+        if (
+            price === undefined ||
+            price === null ||
+            price === ""
+        ) {
             return res.status(400).json({
-                message: "Book price is required"
+                message: "Book price is required."
             });
         }
 
@@ -80,7 +87,7 @@ app.post("/api/books", async (req, res) => {
 
         if (!Number.isFinite(numericPrice) || numericPrice < 0) {
             return res.status(400).json({
-                message: "Please enter a valid, non-negative price"
+                message: "Please enter a valid, non-negative price."
             });
         }
 
@@ -90,7 +97,7 @@ app.post("/api/books", async (req, res) => {
             (sellerEmail !== undefined && typeof sellerEmail !== "string")
         ) {
             return res.status(400).json({
-                message: "Image and seller details must be text"
+                message: "Image and seller details must be text."
             });
         }
 
@@ -98,8 +105,10 @@ app.post("/api/books", async (req, res) => {
             name: name.trim(),
             price: numericPrice,
             image: image || "",
-            sellerName: sellerName || "",
-            sellerEmail: sellerEmail || "",
+            sellerName: sellerName ? sellerName.trim() : "",
+            sellerEmail: sellerEmail
+                ? sellerEmail.trim().toLowerCase()
+                : "",
             status: "available"
         });
 
@@ -111,13 +120,13 @@ app.post("/api/books", async (req, res) => {
         console.error("Error saving book:", error);
 
         if (error.name === "ValidationError") {
-    return res.status(400).json({
-        message: "Invalid order details: " + error.message
-    });
-}
+            return res.status(400).json({
+                message: "Invalid book details: " + error.message
+            });
+        }
 
         return res.status(500).json({
-            message: "Failed to save book"
+            message: "Failed to save book."
         });
     }
 });
@@ -139,7 +148,7 @@ app.post("/api/orders", async (req, res) => {
             buyerPhone
         } = req.body;
 
-        // Validate buyer details
+        // Validate required buyer details
         if (
             typeof bookId !== "string" ||
             !bookId ||
@@ -163,14 +172,14 @@ app.post("/api/orders", async (req, res) => {
 
         const email = buyerEmail.trim().toLowerCase();
 
+        // Correct email validation
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             return res.status(400).json({
                 message: "Please enter a valid email address."
             });
         }
 
-        // Reserve only if the book is still available.
-        // This prevents two requests from reserving the same book.
+        // Reserve the book only if it is available
         const book = await Book.findOneAndUpdate(
             {
                 _id: bookId,
@@ -193,7 +202,7 @@ app.post("/api/orders", async (req, res) => {
 
         reservedBookId = book._id;
 
-        // Save the order in MongoDB
+        // Create and save the order
         const order = await Order.create({
             book: book._id,
             bookName: book.name,
@@ -218,6 +227,7 @@ app.post("/api/orders", async (req, res) => {
                 bookName: order.bookName,
                 price: order.price,
                 buyerName: order.buyerName,
+                buyerEmail: order.buyerEmail,
                 sellerName: order.sellerName,
                 sellerEmail: order.sellerEmail,
                 status: order.status,
@@ -228,7 +238,7 @@ app.post("/api/orders", async (req, res) => {
     } catch (error) {
         console.error("Error creating order:", error);
 
-        // If order creation fails, try to release the reservation.
+        // Release the reservation if order creation fails
         if (reservedBookId) {
             try {
                 await Book.updateOne(
@@ -262,12 +272,44 @@ app.post("/api/orders", async (req, res) => {
 });
 
 // ========================================
+// GET: FETCH ORDERS FOR A BUYER
+// This route must be before the API fallback
+// ========================================
+
+app.get("/api/orders", async (req, res) => {
+    try {
+        const buyerEmail = req.query.buyerEmail;
+
+        if (
+            typeof buyerEmail !== "string" ||
+            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(buyerEmail.trim())
+        ) {
+            return res.status(400).json({
+                message: "A valid buyer email is required."
+            });
+        }
+
+        const orders = await Order.find({
+            buyerEmail: buyerEmail.trim().toLowerCase()
+        }).sort({ createdAt: -1 });
+
+        return res.status(200).json(orders);
+    } catch (error) {
+        console.error("Error fetching orders:", error);
+
+        return res.status(500).json({
+            message: "Could not load your orders."
+        });
+    }
+});
+
+// ========================================
 // HANDLE UNKNOWN API ROUTES
 // Keep this AFTER all API routes
 // ========================================
 
 app.use("/api", (req, res) => {
-    res.status(404).json({
+    return res.status(404).json({
         message: "API route not found"
     });
 });
@@ -283,14 +325,14 @@ app.use((error, req, res, next) => {
         "body" in error
     ) {
         return res.status(400).json({
-            message: "Invalid JSON request body"
+            message: "Invalid JSON request body."
         });
     }
 
     console.error("Unexpected server error:", error);
 
     return res.status(500).json({
-        message: "Internal server error"
+        message: "Internal server error."
     });
 });
 
@@ -302,7 +344,7 @@ async function startServer() {
     try {
         if (!process.env.MONGODB_URI) {
             throw new Error(
-                "MONGODB_URI is missing from your .env file"
+                "MONGODB_URI is missing from your .env file."
             );
         }
 

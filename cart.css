@@ -1,0 +1,249 @@
+
+/* ---------- General ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f7fb;
+    color: #1f2937;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---------- Navbar ---------- */
+.navbar {
+    min-height: 70px;
+    background: #4f46e5;
+    padding: 15px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.logo {
+    color: white;
+    font-size: 25px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    transition: opacity 0.2s;
+}
+
+.nav-links a:hover {
+    opacity: 0.75;
+}
+
+.nav-links a.active {
+    font-weight: bold;
+    text-decoration: underline;
+    text-underline-offset: 6px;
+}
+
+/* ---------- Main Page ---------- */
+.cart-page {
+    width: 86%;
+    max-width: 1100px;
+    margin: 45px auto;
+    flex: 1;
+}
+
+.cart-header {
+    margin-bottom: 35px;
+}
+
+.eyebrow {
+    color: #4f46e5;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.cart-header h1 {
+    font-size: 38px;
+    margin-bottom: 12px;
+    color: #111827;
+}
+
+.cart-header > p:last-child {
+    color: #6b7280;
+    line-height: 1.6;
+}
+
+/* ---------- Orders Heading ---------- */
+.cart-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.cart-summary h2 {
+    font-size: 23px;
+    margin-bottom: 7px;
+}
+
+.cart-summary p {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.book-count {
+    background: #e0e7ff;
+    color: #4338ca;
+    padding: 9px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+/* ---------- Orders Container ---------- */
+.cart-container {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.cart-item {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cart-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+}
+
+.cart-details h2 {
+    font-size: 21px;
+    color: #111827;
+    margin-bottom: 14px;
+}
+
+.cart-details p {
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+
+.cart-details .price {
+    color: #4f46e5;
+    font-size: 19px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.order-status {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 7px 12px;
+    background: #fef3c7;
+    color: #92400e !important;
+    border-radius: 20px;
+    font-size: 12px !important;
+    font-weight: bold;
+}
+
+/* ---------- Loading, Empty and Error States ---------- */
+.loading-message,
+.empty-message,
+.error-message {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 45px 20px;
+    text-align: center;
+    color: #6b7280;
+    line-height: 1.7;
+}
+
+.empty-message h3 {
+    color: #111827;
+    margin-bottom: 10px;
+}
+
+.shop-button {
+    display: inline-block;
+    margin-top: 18px;
+    padding: 12px 22px;
+    background: #4f46e5;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.shop-button:hover {
+    background: #4338ca;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+    text-align: center;
+    padding: 22px 15px;
+    color: #6b7280;
+    font-size: 13px;
+    border-top: 1px solid #e5e7eb;
+    background: white;
+    margin-top: 30px;
+}
+
+/* ---------- Responsive Design ---------- */
+@media (max-width: 650px) {
+    .navbar {
+        padding: 18px 5%;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .nav-links {
+        gap: 15px;
+    }
+
+    .cart-page {
+        width: 90%;
+        margin: 30px auto;
+    }
+
+    .cart-header h1 {
+        font-size: 30px;
+    }
+
+    .cart-item {
+        padding: 18px;
+    }
+
+    .cart-summary {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

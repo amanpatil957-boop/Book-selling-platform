@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Cart - Book Haven</title>
+
+    <link rel="stylesheet" href="cart.css">
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <a href="index.html" class="logo">Book Haven</a>
+
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="buy.html">Buy Books</a>
+            <a href="sell.html">Sell Books</a>
+            <a href="cart.html" class="active">My Cart</a>
+        </nav>
+    </header>
+
+    <!-- Main Cart Content -->
+    <main class="cart-page">
+
+        <!-- Page Heading -->
+        <div class="cart-header">
+            <p class="eyebrow">YOUR PERSONAL LIBRARY</p>
+            <h1>My Cart</h1>
+            <p>View your ordered books and their status.</p>
+        </div>
+
+        <!-- Order Summary -->
+        <section class="cart-summary">
+            <div>
+                <h2>My Orders</h2>
+                <p>Your books, all in one place.</p>
+            </div>
+
+            <span id="bookCount" class="book-count">
+                Loading...
+            </span>
+        </section>
+
+        <!-- Orders Will Appear Here -->
+        <section id="cartContainer" class="cart-container">
+            <div class="loading-message">
+                Loading your books...
+            </div>
+        </section>
+
+        <!-- Error Message Area -->
+        <p id="cartError" role="alert" style="color: #dc2626;"></p>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 Book Haven</p>
+    </footer>
+
+    <!-- Cart JavaScript -->
+    <script src="cart.js"></script>
+
+</body>
+</html>
+```
