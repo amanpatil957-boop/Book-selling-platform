@@ -1,166 +1,192 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const booksContainer = document.getElementById("booksContainer");
+    const noBooks = document.getElementById("noBooks");
 
-/* =========================
-   CHECK LOGIN
-========================= */
-
-if (!localStorage.getItem("currentUser")) {
-    alert("Please login first.");
-    window.location.href = "auth.html";
-}
-
-/* =========================
-   ELEMENTS
-========================= */
-
-const booksContainer = document.getElementById("booksContainer");
-const noBooks = document.getElementById("noBooks");
-
-/* =========================
-   LOAD BOOKS FROM MONGODB
-========================= */
-
-async function displayBooks() {
-    if (!booksContainer) {
-        console.error("booksContainer not found in buy.html");
-        return;
-    }
-
-    // Show loading message
-    booksContainer.innerHTML = "<p>Loading books...</p>";
-
-    // Hide empty-state message while loading
-    if (noBooks) {
-        noBooks.hidden = true;
-        noBooks.style.display = "none";
-    }
-
-    try {
-        // Request books from the backend
-        const response = await fetch("/api/books");
-
-        const responseText = await response.text();
-
-        console.log("API status:", response.status);
-        console.log("API response:", responseText);
-
-        if (!response.ok) {
-            throw new Error(
-                `Server error ${response.status}: ${responseText}`
-            );
-        }
-
-        if (!responseText.trim()) {
-            throw new Error("The server returned an empty response.");
-        }
-
-        // Convert response into JSON
-        let books;
-
-        try {
-            books = JSON.parse(responseText);
-        } catch (error) {
-            throw new Error("The server did not return valid JSON.");
-        }
-
-        if (!Array.isArray(books)) {
-            throw new Error("Expected an array of books.");
-        }
-
-        // Clear loading message
-        booksContainer.innerHTML = "";
-
-        // Show empty-state message only if no books exist
-        if (books.length === 0) {
-            if (noBooks) {
-                noBooks.hidden = false;
-                noBooks.style.display = "block";
-            } else {
-                booksContainer.textContent = "No books available yet.";
-            }
-
+    async function loadBooks() {
+        if (!booksContainer) {
+            console.error("booksContainer element not found in buy.html");
             return;
         }
 
-        // Books exist, so hide the empty-state section
-        if (noBooks) {
-            noBooks.hidden = true;
-            noBooks.style.display = "none";
-        }
+        booksContainer.innerHTML = "<p>Loading books...</p>";
 
-        // Display each book
-        books.forEach(function (book) {
-            const card = document.createElement("div");
-            card.className = "book-card";
+        try {
+            const response = await fetch("/api/books");
 
-            // Book image
-            const image = document.createElement("img");
-
-            if (book.image) {
-                image.src = book.image;
-            } else {
-                image.alt = "No image available";
+            if (!response.ok) {
+                throw new Error("Failed to load books.");
             }
 
-            image.alt = book.name || "Book";
-            image.loading = "lazy";
+            const books = await response.json();
 
-            // Book details container
-            const details = document.createElement("div");
-            details.className = "book-details";
+            booksContainer.innerHTML = "";
 
-            // Book title
-            const title = document.createElement("h2");
-            title.textContent = book.name || "Untitled";
+            if (noBooks) {
+                noBooks.hidden = books.length > 0;
+                noBooks.style.display = books.length > 0 ? "none" : "block";
+            }
 
-            // Book price
-            const price = document.createElement("p");
-            price.className = "price";
-            price.textContent = "₹" + book.price;
+            if (books.length === 0) {
+                booksContainer.innerHTML = "<p>No books are available right now.</p>";
+                return;
+            }
 
-            // Buy button
-            const button = document.createElement("button");
-            button.className = "buy-btn";
-            button.textContent = "Buy Now";
+            books.forEach(function (book) {
+                const card = document.createElement("div");
+                card.className = "book-card";
 
-            button.addEventListener("click", function () {
-                buyBook(book.name || "Untitled");
+                const img = document.createElement("img");
+                img.src = book.image || "";
+                img.alt = book.name || "Book";
+                img.className = "book-image";
+
+                const title = document.createElement("h3");
+                title.textContent = book.name || "Untitled Book";
+
+                const price = document.createElement("p");
+                price.textContent = "₹" + book.price;
+                price.className = "book-price";
+
+                const seller = document.createElement("p");
+                seller.textContent = "Seller: " + (book.sellerName || "Not provided");
+
+                const buyButton = document.createElement("button");
+                buyButton.textContent = "Buy Now";
+                buyButton.className = "buy-button";
+
+                buyButton.addEventListener("click", async function () {
+                    const currentUser = localStorage.getItem("currentUser");
+
+                    if (!currentUser) {
+                        alert("Please login first.");
+                        window.location.href = "auth.html";
+                        return;
+                    }
+
+                    let buyerName = "";
+                    let buyerEmail = "";
+
+                    try {
+                        const user = JSON.parse(currentUser);
+
+                        if (user && typeof user === "object") {
+                            buyerName = user.name || user.username || "";
+                            buyerEmail = user.email || "";
+                        } else {
+                            buyerName = String(user || "");
+                        }
+                    } catch {
+                        buyerName = currentUser;
+                    }
+
+                    const enteredName = prompt(
+                        "Enter your full name:",
+                        buyerName
+                    );
+
+                    if (!enteredName || !enteredName.trim()) {
+                        alert("Please enter your name.");
+                        return;
+                    }
+
+                    const enteredEmail = prompt(
+                        "Enter your email:",
+                        buyerEmail
+                    );
+
+                    if (
+                        !enteredEmail ||
+                        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(enteredEmail.trim())
+                    ) {
+                        alert("Please enter a valid email address.");
+                        return;
+                    }
+
+                    const buyerPhone = prompt("Enter your phone number:");
+
+                    if (!buyerPhone || !buyerPhone.trim()) {
+                        alert("Please enter your phone number.");
+                        return;
+                    }
+
+                    const confirmed = confirm(
+                        "Confirm your order?\n\n" +
+                        "Book: " + book.name + "\n" +
+                        "Price: ₹" + book.price + "\n" +
+                        "Seller: " + (book.sellerName || "Not provided") + "\n\n" +
+                        "Payment: In person\n" +
+                        "Collection: Contact the seller\n\n" +
+                        "No online payment will be made."
+                    );
+
+                    if (!confirmed) {
+                        return;
+                    }
+
+                    buyButton.disabled = true;
+                    buyButton.textContent = "Placing order...";
+
+                    try {
+                        const orderResponse = await fetch("/api/orders", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                bookId: book._id,
+                                buyerName: enteredName.trim(),
+                                buyerEmail: enteredEmail.trim(),
+                                buyerPhone: buyerPhone.trim()
+                            })
+                        });
+
+                        const result = await orderResponse.json();
+
+                        if (!orderResponse.ok) {
+                            throw new Error(
+                                result.message || "Could not place your order."
+                            );
+                        }
+
+                        let message =
+                            "Order request created successfully!\n\n" +
+                            "Book: " + result.order.bookName + "\n" +
+                            "Price: ₹" + result.order.price + "\n" +
+                            "Order ID: " + result.order.id + "\n\n" +
+                            "Please contact the seller to arrange collection " +
+                            "and payment in person.";
+
+                        if (result.order.sellerEmail) {
+                            message +=
+                                "\nSeller email: " + result.order.sellerEmail;
+                        }
+
+                        alert(message);
+
+                        await loadBooks();
+                    } catch (error) {
+                        console.error("Order error:", error);
+                        alert(error.message || "Something went wrong.");
+                    } finally {
+                        buyButton.disabled = false;
+                        buyButton.textContent = "Buy Now";
+                    }
+                });
+
+                card.appendChild(img);
+                card.appendChild(title);
+                card.appendChild(price);
+                card.appendChild(seller);
+                card.appendChild(buyButton);
+
+                booksContainer.appendChild(card);
             });
-
-            // Assemble the book card
-            details.appendChild(title);
-            details.appendChild(price);
-            details.appendChild(button);
-
-            card.appendChild(image);
-            card.appendChild(details);
-
-            booksContainer.appendChild(card);
-        });
-
-        console.log("Books displayed successfully:", books.length);
-
-    } catch (error) {
-        console.error("Error loading books:", error);
-
-        booksContainer.innerHTML =
-            "<p>Unable to load books. Please refresh the page.</p>";
+        } catch (error) {
+            console.error("Loading books error:", error);
+            booksContainer.innerHTML =
+                "<p>Could not load books. Please refresh and try again.</p>";
+        }
     }
-}
 
-/* =========================
-   BUY BUTTON
-========================= */
-
-function buyBook(bookName) {
-    alert(
-        "You selected: " +
-        bookName +
-        "\n\nThank you for choosing Book Haven!"
-    );
-}
-
-/* =========================
-   RUN WHEN PAGE LOADS
-========================= */
-
-displayBooks();
+    loadBooks();
+});
